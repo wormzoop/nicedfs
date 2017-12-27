@@ -1,7 +1,7 @@
 # nicedfs
 整个结构是</br>
 /nicedfs</br>
-	/bin (.sh .bat)</br>
+	$nbsp;/bin (.sh .bat)</br>
 	/conf (配置文件)</br>
 	/lib (jar包)</br>
 	/file (默认的文件存放地)</br>
