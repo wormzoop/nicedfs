@@ -1,7 +1,10 @@
 package com.zoop.web;
 
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 上传存储文件
@@ -16,13 +19,10 @@ public class FileUpload {
 		try {
 			serverSocket = new ServerSocket();
 			System.out.println("socket monitor start");
+			ExecutorService cacheThreadPool = Executors.newCachedThreadPool();
 			while(true) {
 				Socket socket = serverSocket.accept();
-				new Thread(new Runnable() {
-					public void run() {
-						
-					}
-				}).start();
+				cacheThreadPool.execute(new SocketHandler(socket));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -35,6 +35,35 @@ public class FileUpload {
 				
 			}
 		}
+	}
+	
+	//新线程处理请求
+	class SocketHandler implements Runnable {
+
+		private Socket socket;
+		
+		public SocketHandler(Socket socket) {
+			this.socket = socket;
+		}
+		
+		@Override
+		public void run() {
+			InputStream in = null;
+			try {
+				in = socket.getInputStream();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally {
+				try {
+					if(in != null) {
+						in.close();
+					}
+				}catch(Exception e) {
+					
+				}
+			}
+		}
+		
 	}
 	
 }
