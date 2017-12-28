@@ -1,10 +1,12 @@
 package com.zoop.web;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -56,29 +58,35 @@ public class FileUpload {
 			try {
 				in = socket.getInputStream();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-//				String boundary = reader.readLine();
-//				String disposition = reader.readLine();
-//				int fileIndex = disposition.indexOf("filename=\"");
-//				String fileName = disposition.substring(fileIndex,disposition.indexOf("\"",fileIndex));
-//				reader.readLine();
-//				reader.readLine();
-//				//开始读取正文
-//				File file = new File("F:/upload/"+fileName);
-//				file.createNewFile();
-//				FileOutputStream out = new FileOutputStream(file);
-//				String line;
-//				while((line = reader.readLine()) != null) {
-//					if(line.startsWith(boundary) && line.endsWith("--"))
-//						break;
-//					out.write(line.getBytes());
-//					out.flush();
-//				}
-//				//读取正文结束
-//				out.close();
+				String boundary = "";
+				String fileName = "";
+				String line_header;
+				while((line_header = reader.readLine()) != null) {
+					if(line_header.startsWith("content-type"))
+						boundary = line_header.substring(line_header.indexOf("boundary=")+9);
+					if(line_header.startsWith("Content-Disposition")) {
+						fileName = line_header.substring(line_header.indexOf("filename=\"")+10, line_header.length()-1);
+						break;
+					}
+				}
+				reader.readLine();
+				reader.readLine();
+				//开始读取正文
+				File file = new File("F:/upload/"+fileName);
+				file.createNewFile();
+				FileOutputStream out = new FileOutputStream(file);
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out,"UTF-8"));
 				String line;
 				while((line = reader.readLine()) != null) {
-					System.out.println(line);
+					if(line.contains(boundary) && line.endsWith("--"))
+						break;
+					writer.write(line);
+					writer.newLine();
+					writer.flush();
 				}
+				//读取正文结束
+				writer.close();
+				out.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}finally {
