@@ -6,5 +6,6 @@
 	---/lib (jar包)</br>
 	---/file (默认的文件存放地)</br>
 	---/README.md (说明)</br>
-这个源代码属于jar这个部分
+这个源代码属于jar这个部分</br>
+启动bin目录下的start.sh或者start.bat就行
 
