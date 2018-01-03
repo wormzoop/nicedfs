@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URLDecoder;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -63,7 +64,7 @@ public class FetchFileHandle {
 				if(line != null) {
 					int index = line.indexOf(" ");
 					fileName = line.substring(index+1,line.indexOf(" ",index+1));
-					fileName = new String(fileName.getBytes("gbk"),"utf-8");
+					fileName = URLDecoder.decode(fileName,"utf-8");
 					File file = new File("F:/upload"+fileName);
 					if(file.exists()) {
 						writer.println("HTTP/1.0 200 OK");
