@@ -90,11 +90,12 @@ public class FileUpload {
 					writer.close();
 					out.close();
 					PrintWriter ret = new PrintWriter(socket.getOutputStream());
+					String url = "http://localhost:8899/"+fileName;
 					ret.println("HTTP/1.0 200 OK");
 					ret.println("Content-Type: text/html");
-					ret.println("Content-Length: 16");
+					ret.println("Content-Length: "+url.length());
 					ret.println();
-					ret.println("<h1>success</h1>");
+					ret.println(url);
 					ret.close();
 				}
 			} catch (Exception e) {
