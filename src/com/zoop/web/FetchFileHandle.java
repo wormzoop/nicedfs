@@ -21,11 +21,15 @@ import java.util.concurrent.Executors;
  */
 public class FetchFileHandle {
 
+	public static int port = 8899;
+	
+	public static String dir = "F:/upload";
+	
 	//监听
 	public void accept() {
 		ServerSocket serverSocket = null;
 		try {
-			serverSocket = new ServerSocket(8899);
+			serverSocket = new ServerSocket(port);
 			System.out.println("fetch server is started");
 			ExecutorService executor = Executors.newCachedThreadPool();
 			while(true) {
@@ -65,7 +69,7 @@ public class FetchFileHandle {
 					int index = line.indexOf(" ");
 					fileName = line.substring(index+1,line.indexOf(" ",index+1));
 					fileName = URLDecoder.decode(fileName,"utf-8");
-					File file = new File("F:/upload"+fileName);
+					File file = new File(dir+fileName);
 					if(file.exists()) {
 						writer.println("HTTP/1.0 200 OK");
 						writer.println("Content-Type: application/octet-stream");

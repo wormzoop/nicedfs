@@ -21,10 +21,12 @@ import java.util.concurrent.Executors;
  */
 public class FileUpload {
 
+	public static int port = 8889;
+	
 	public void accept() {
 		ServerSocket serverSocket = null;
 		try {
-			serverSocket = new ServerSocket(8889);
+			serverSocket = new ServerSocket(port);
 			System.out.println("socket monitor start");
 			ExecutorService cacheThreadPool = Executors.newCachedThreadPool();
 			while(true) {
