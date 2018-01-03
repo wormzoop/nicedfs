@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -69,24 +70,33 @@ public class FileUpload {
 						break;
 					}
 				}
-				reader.readLine();
-				reader.readLine();
-				//开始读取正文
-				File file = new File("F:/upload/"+fileName);
-				file.createNewFile();
-				FileOutputStream out = new FileOutputStream(file);
-				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out,"UTF-8"));
-				String line;
-				while((line = reader.readLine()) != null) {
-					if(line.contains(boundary) && line.endsWith("--"))
-						break;
-					writer.write(line);
-					writer.newLine();
-					writer.flush();
+				if(!fileName.equals("")) {
+					reader.readLine();
+					reader.readLine();
+					//开始读取正文
+					File file = new File("F:/upload/"+fileName);
+					file.createNewFile();
+					FileOutputStream out = new FileOutputStream(file);
+					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out,"UTF-8"));
+					String line;
+					while((line = reader.readLine()) != null) {
+						if(line.contains(boundary) && line.endsWith("--"))
+							break;
+						writer.write(line);
+						writer.newLine();
+						writer.flush();
+					}
+					//读取正文结束
+					writer.close();
+					out.close();
+					PrintWriter ret = new PrintWriter(socket.getOutputStream());
+					ret.println("HTTP/1.0 200 OK");
+					ret.println("Content-Type: text/html");
+					ret.println("Content-Length: 16");
+					ret.println();
+					ret.println("<h1>success</h1>");
+					ret.close();
 				}
-				//读取正文结束
-				writer.close();
-				out.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}finally {
