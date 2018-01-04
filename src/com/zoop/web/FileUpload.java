@@ -13,6 +13,8 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.zoop.util.Config;
+
 /**
  * 上传存储文件
  * 端口及文件存放路径在配置文件配制
@@ -21,12 +23,10 @@ import java.util.concurrent.Executors;
  */
 public class FileUpload {
 
-	public static int port = 8889;
-	
 	public void accept() {
 		ServerSocket serverSocket = null;
 		try {
-			serverSocket = new ServerSocket(port);
+			serverSocket = new ServerSocket(Config.uploadPort);
 			System.out.println("socket monitor start");
 			ExecutorService cacheThreadPool = Executors.newCachedThreadPool();
 			while(true) {
@@ -76,7 +76,7 @@ public class FileUpload {
 					reader.readLine();
 					reader.readLine();
 					//开始读取正文
-					File file = new File("F:/upload/"+fileName);
+					File file = new File(Config.dir+fileName);
 					file.createNewFile();
 					FileOutputStream out = new FileOutputStream(file);
 					BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out,"UTF-8"));
@@ -92,7 +92,7 @@ public class FileUpload {
 					writer.close();
 					out.close();
 					PrintWriter ret = new PrintWriter(socket.getOutputStream());
-					String url = "http://localhost:8899/"+fileName;
+					String url = Config.http+fileName;
 					ret.println("HTTP/1.0 200 OK");
 					ret.println("Content-Type: text/html");
 					ret.println("Content-Length: "+url.length());
