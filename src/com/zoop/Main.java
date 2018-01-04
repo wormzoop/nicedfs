@@ -8,7 +8,7 @@ public class Main {
 
 	//启动
 	public static void main(String[]args) {
-		//配黑文件
+		//配置参数
 		Config config = new Config();
 		config.config();
 		
